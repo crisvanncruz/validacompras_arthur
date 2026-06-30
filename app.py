@@ -64,12 +64,20 @@ with st.container():
 
     boton = st.button("Validar compra", type="primary")
 
-if boton and input_usuario:
-    with st.spinner("Consultando políticas de homologación..."):
-        try:
-            respuesta = agente_arthur.invoke({"input": input_usuario})
-            st.markdown("---")
-            st.markdown("### Veredicto de Arthur")
-            st.info(respuesta)
-        except Exception as e:
-            st.error(f"Error técnico: {e}")
+if boton:
+    if not input_usuario:
+        st.warning("Por favor, escribe una solicitud.")
+    else:
+
+        with st.spinner("Arthur está consultando las políticas..."):
+            try:
+     
+                respuesta = agente_arthur.invoke({"input": input_usuario})
+                
+                # Mostrar resultado
+                st.markdown("---")
+                st.markdown("### 📋 Veredicto de Arthur")
+                st.info(respuesta)
+            except Exception as e:
+                st.error(f"Error de conexión con Gemini: {e}")
+                st.write("Tip: Verifica que tu GOOGLE_API_KEY en los Secrets tenga permisos para gemini-3.5-flash.")

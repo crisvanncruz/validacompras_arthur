@@ -20,7 +20,7 @@ st.image("logo.jpg", width=200)
 st.title("Arthur: Validador de Compras")
 st.subheader("Asistente IA para homologación de equipos", divider='blue')
 
-# 4. Carga de datos
+
 @st.cache_data
 def cargar_catalogo():
     df = pd.read_csv('catalogo_compras.csv')
@@ -34,7 +34,7 @@ except KeyError:
     st.error("Configuración pendiente: Agrega GOOGLE_API_KEY en los Secrets de Streamlit.")
     st.stop()
 
-# 6. Lógica del Agente
+
 llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash", temperature=0)
 
 system_prompt = (
@@ -54,25 +54,22 @@ prompt = ChatPromptTemplate.from_messages([
 
 agente_arthur = prompt | llm | StrOutputParser()
 
-with st.expander("¿Cómo validar una compra?"):
-    st.write("1. Escribe el producto que deseas solicitar en la caja de texto.")
-    st.write("2. Arthur contrastará la solicitud con nuestro catálogo oficial.")
-    st.write("3. Recibirás el veredicto: Aprobado, Restringido o Rechazado.")
+with st.expander("¿Cómo funciona Arthur?"):
+    st.write("Escribe el nombre del equipo y verificaré su estado según el catálogo oficial.")
 
-col1, col2 = st.columns([3, 1])
 
-with col1:
+with st.container():
     input_usuario = st.text_input("Solicitud de compra:", placeholder="Ej: ¿Puedo comprar una laptop Dell Latitude 7420?")
+    
 
-with col2:
-    st.write("###") 
-    boton = st.button("Validar compra")
+    boton = st.button("Validar compra", type="primary")
 
 if boton and input_usuario:
-    with st.spinner("Arthur está analizando las políticas..."):
+    with st.spinner("Consultando políticas de homologación..."):
         try:
             respuesta = agente_arthur.invoke({"input": input_usuario})
-            st.markdown("### Respuesta de Arthur:")
+            st.markdown("---")
+            st.markdown("### Veredicto de Arthur")
             st.info(respuesta)
         except Exception as e:
             st.error(f"Error técnico: {e}")

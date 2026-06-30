@@ -11,7 +11,8 @@ st.markdown("""
     <style>
     .stApp { background-color: #0e1117; }
     h1 { color: #ffffff; text-align: center; margin-bottom: 0px; }
-    .subtitle { text-align: center; color: #808495; margin-bottom: 2rem; }
+    .subtitle { text-align: center; color: #808495; margin-bottom: 1rem; }
+    .streamlit-expanderHeader { justify-content: center; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -19,7 +20,11 @@ st.image("logo.jpg", width=150)
 st.title("Hola, soy Arthur.")
 st.markdown("<div class='subtitle'>¿En qué equipo necesitas ayuda hoy?</div>", unsafe_allow_html=True)
 
+# 4. Expander recuperado
+with st.expander("¿Cómo funciona Arthur?"):
+    st.write("Escribe el nombre del equipo y verificaré su estado según el catálogo oficial.")
 
+# 5. Carga y caché del catálogo
 @st.cache_data
 def cargar_catalogo():
     df = pd.read_csv('catalogo_compras.csv')
@@ -37,7 +42,6 @@ except KeyError:
     st.error("Configuración pendiente: Agrega GOOGLE_API_KEY en los Secrets de Streamlit.")
     st.stop()
 
-# 6. Lógica del Agente
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
 
 system_prompt = (
@@ -57,13 +61,10 @@ prompt = ChatPromptTemplate.from_messages([
 
 agente_arthur = prompt | llm | StrOutputParser()
 
-
 if prompt := st.chat_input("Mensaje a Arthur..."):
-    # Mostrar mensaje del usuario
     with st.chat_message("user"):
         st.write(prompt)
     
-
     with st.chat_message("assistant"):
         with st.spinner("Arthur está analizando..."):
             try:

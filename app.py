@@ -35,7 +35,7 @@ except KeyError:
     st.stop()
 
 
-llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash", temperature=0)
+llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
 
 system_prompt = (
     "Eres Arthur, el Validador de Compras Corporativas. "

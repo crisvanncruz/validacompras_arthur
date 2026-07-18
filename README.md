@@ -20,7 +20,7 @@ El sistema utiliza una arquitectura web desacoplada con capacidades de visión (
 * **Infraestructura Cloud:** Preparado para Amazon Web Services (AWS EC2) gestionado con Nginx y Systemd.
 
 ## Enlace de Producción
-* **Acceso a la app:** `http://[TU_IP_PUBLICA_O_DOMINIO_DE_AWS]`
+* **Acceso a la app:** `http://18.216.243.7/`
 
 ## Instrucciones para Ejecución Local
 Para levantar el entorno de desarrollo, es necesario inicializar el backend y el frontend por separado:

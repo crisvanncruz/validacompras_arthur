@@ -327,12 +327,12 @@ export default function App() {
             </div>
           <div>
             <h1 className="text-base font-bold text-slate-900 leading-tight tracking-tight flex items-center gap-1.5">
-              Agente
+              ARTHUR
               <span className="hidden sm:inline bg-indigo-50 text-indigo-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-indigo-100">
-                Homologación DE Compras
+                Agente IA
               </span>
             </h1>
-            <p className="text-[11px] text-slate-500 font-medium">Arthur Asistente De Compras</p>
+            <p className="text-[11px] text-slate-500 font-medium">Asistente De Compras</p>
           </div>
         </div>
 

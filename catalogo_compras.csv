@@ -1,7 +1,0 @@
-ID_Articulo,Categoria,Marca_Modelo,Clasificacion_Seguridad,Precio_Tope_USD,Estado_Homologacion,Regla_Negocio
-EQ-001,Laptop,Lenovo ThinkPad T14,Alta,1200,Aprobado,Permitido para perfiles administrativos y operativos.
-EQ-002,Laptop,Dell Latitude 7420,Alta,1400,Aprobado,Uso exclusivo para gerencias medias y directivos.
-EQ-003,Monitor,HP E24 G4,Estandar,250,Aprobado,Se permite maximo dos monitores por usuario.
-EQ-004,Servidor,HPE ProLiant DL380,Critica,8500,Aprobado,Requiere aprobacion directa del CISO.
-EQ-005,Tablet,Apple iPad Pro,Media,1100,Restringido,Solo permitido para equipo comercial en campo.
-EQ-006,Software,Licencia Zoom Pro,Estandar,150,Rechazado,Sustituido corporativamente por Microsoft Teams.

@@ -20,8 +20,6 @@ RUN npm run build
 
 EXPOSE 3000
 
-# Establece la variable de entorno para producción
 ENV NODE_ENV=production
 
-# Comando para iniciar tu servidor orquestador
 CMD ["npx", "ts-node", "server.ts"]

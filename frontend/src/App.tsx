@@ -322,7 +322,7 @@ export default function App() {
           >
             <Menu className="w-5 h-5" />
           </button>
-            <div className="w-9 h-9 flex items-center justify-center shrink-0">
+            <div className="w-9 h-11 flex items-center justify-center shrink-0">
               <img src="/logo.svg" alt="Logo Arthur" className="w-full h-full object-contain" />
             </div>
           <div>

@@ -145,36 +145,7 @@ La arquitectura está diseñada para orquestarse desde un único script principa
 
 Debido a que el servidor de Node.js se encarga de levantar el subproceso de Python (`child_process.spawn`), la estrategia ideal para desplegar esta aplicación en plataformas como **Render** o **Railway** es mediante un contenedor Docker que incluya ambos entornos (Node.js y Python).
 
-Puedes usar el siguiente `Dockerfile` en la raíz de tu proyecto para desplegarlo fácilmente en cualquier servicio PaaS:
 
-```dockerfile
-# Usa una imagen base que contiene tanto Python como Node.js
-FROM nikolaik/python-nodejs:python3.10-nodejs18
-
-WORKDIR /app
-
-# 1. Instalar dependencias de Node.js
-COPY package*.json ./
-RUN npm install
-
-# 2. Instalar dependencias de Python
-COPY backend/requirements.txt ./backend/
-RUN pip install -r backend/requirements.txt
-
-# 3. Copiar el resto del código
-COPY . .
-
-# 4. Construir el frontend (Vite)
-RUN npm run build
-
-# 5. Exponer el puerto del orquestador Node.js
-EXPOSE 3000
-
-# 6. Definir variables de entorno para producción
-ENV NODE_ENV=production
-
-# 7. Iniciar el servidor
-CMD ["npx", "ts-node", "server.ts"]
 ```
 
 ## Estructura Principal del Proyecto

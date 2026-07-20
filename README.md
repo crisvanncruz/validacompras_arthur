@@ -1,42 +1,197 @@
-# Validador de Compras Corporativas (Arthur)
+# ⚡ Arthur — Sistema Entrenado para Homologación de Compras Corporativas
 
-## Descripción General
-Este proyecto implementa a **Arthur**, un agente de inteligencia artificial diseñado para automatizar y agilizar la validación de solicitudes de compra corporativa.
-El sistema cruza las peticiones de los usuarios (ya sea en texto, imágenes o PDFs escaneados) con un catálogo oficial de productos homologados,
-determinando de manera autónoma si un equipo está "Aprobado", "Restringido" o "Rechazado", y proporcionando la regla de negocio correspondiente.
+![React](https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=flat-square&logo=vite&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.100-009688?style=flat-square&logo=fastapi&logoColor=white)
+![Gemini](https://img.shields.io/badge/Google_Gemini-3.5_Flash-4285F4?style=flat-square)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)
+
+## Descripción General del Proyecto
+
+Este proyecto implementa a **Arthur** , un agente de inteligencia artificial diseñado para automatizar y agilizar la validación de solicitudes de compra corporativa. 
+
+El sistema actúa como una primera línea de defensa que procesa solicitudes de usuarios finales —mediante lenguaje natural o extracción documental— y las audita contra un catálogo maestro de hardware homologado. Al centralizar y estandarizar la evaluación, Arthur reduce drásticamente el tiempo de procesamiento operativo (SLA), asegura el cumplimiento estricto de las directrices presupuestarias y elimina el sesgo humano en la validación técnica de activos tecnológicos.
+
+---
 
 ## Arquitectura de la Solución
-El sistema utiliza una arquitectura web desacoplada con capacidades de visión (multimodal):
-* **Backend (FastAPI):** Expone un endpoint RESTful que orquesta la validación y seguridad.
-* **Procesamiento Documental:** PyMuPDF se encarga de extraer páginas completas de archivos PDF y convertirlas en imágenes de alta resolución.
-* **Motor IA (LLM):** LangChain y Google Gemini 3.5 Flash procesan tanto el texto como la carga visual (OCR nativo) para extraer la información de las proformas o carritos de compra.
-* **Base de Datos:** Un archivo CSV (`catalogo_compras.csv`) actúa como la única fuente de verdad para evitar alucinaciones.
-* **Frontend:** Interfaz pura interactiva construida con HTML5, JavaScript (Vanilla) y Tailwind CSS.
 
-## Tecnologías y Herramientas
-* **Backend:** Python 3.x, FastAPI, Pydantic, Uvicorn
-* **IA y Visión:** LangChain, Google Generative AI, PyMuPDF (fitz), Pandas
-* **Frontend:** HTML, JavaScript, CSS, Tailwind
-* **Infraestructura Cloud:** Preparado para Amazon Web Services (AWS EC2) gestionado con Nginx y Systemd.
+El proyecto implementa una **arquitectura web desacoplada (SPA + API REST)** optimizada para despliegues en la nube, garantizando alta disponibilidad, seguridad y separación de responsabilidades. El flujo de datos está diseñado para aislar el frontend del cliente mediante un backend orquestador (Node.js/Express) que sirve la interfaz estática y actúa como proxy inverso hacia el motor analítico transaccional desarrollado en Python (FastAPI).
 
-## Enlace de Producción
-* **Acceso a la app:** `http://18.216.243.7/`
+El proyecto implementa una **arquitectura web desacoplada (SPA + API REST)** optimizada para despliegues en la nube, garantizando alta disponibilidad, seguridad y separación de responsabilidades. El flujo de datos está diseñado para aislar el frontend del cliente mediante un backend orquestador (Node.js/Express) que sirve la interfaz estática y actúa como proxy inverso hacia el motor analítico transaccional desarrollado en Python (FastAPI).
 
-## Instrucciones para Ejecución Local
-Para levantar el entorno de desarrollo, es necesario inicializar el backend y el frontend por separado:
+```mermaid
+flowchart TD
+    %% Definición de estilos
+    classDef startEnd fill:#d5e8d4,stroke:#82b366,stroke-width:2px,color:#2d4a22;
+    classDef gateway fill:#ffe6cc,stroke:#d79b00,stroke-width:2px,color:#664d00;
+    classDef task fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px,rx:8px,ry:8px,color:#1b3b6c;
+    classDef database fill:#e1d5e7,stroke:#9673a6,stroke-width:2px,rx:8px,ry:8px,color:#3b2346;
+    classDef external fill:#f8cecc,stroke:#b85450,stroke-width:2px,rx:8px,ry:8px,color:#592422,stroke-dasharray: 5 5;
 
-1. Clona este repositorio:
-   `git clone https://github.com/tu-usuario/tu-repo.git`
-2. Crea un archivo `.env.development` en la raíz del proyecto y agrega tu llave de acceso:
-   `GOOGLE_API_KEY=tu_api_key_aqui`
-3. Instala las dependencias del backend e inicia el servidor de FastAPI:
-   `cd backend`
-   `pip install -r requirements.txt`
-   `python main.py`
-4. En una nueva terminal, inicia un servidor estático para la interfaz:
-   `cd frontend`
-   `python -m http.server 3000`
-5. Visita `http://localhost:3000` en tu navegador.
+    subgraph Carril_Usuario [🧑‍💻 Capa Cliente / UI React]
+        E_Start((Inicio)):::startEnd
+        T_Input[Ingresa prompt o \nadjunta PDF/Imagen]:::task
+        T_View[Visualiza dictamen técnico \ny regla aplicada]:::task
+        E_End((Fin)):::startEnd
+    end
+
+    subgraph Carril_Node [🖥️ Capa de Presentación / Node.js Proxy]
+        T_Payload[Estructura Payload Multimodal]:::task
+        T_Proxy[Proxy Inverso POST \n Puerto 3000 a 8000]:::task
+        T_Render[Renderizado de Estado \ny UI Reactiva]:::task
+    end
+
+    subgraph Carril_Python [⚙️ Motor Lógico / Python FastAPI]
+        G_Adjunto{¿Incluye\nArchivo Adjunto?}:::gateway
+        T_ProcesarDoc[PyMuPDF: Rasterización \ny Extracción]:::task
+        T_PrepararTexto[Normalización de prompt]:::task
+        DB_Catalogo[(Catálogo Maestro CSV)]:::database
+        T_Contexto[Inyección de Contexto \ny Reglas]:::task
+        T_Respuesta[Parseo y Sanitización JSON]:::task
+    end
+
+    subgraph Carril_IA [🧠 Motor Cognitivo]
+        T_LLM[Inferencia Multimodal \n LLM: Gemini 3.5 Flash]:::external
+    end
+
+    %% Relaciones
+    E_Start --> T_Input
+    T_Input -->|Interacción UI| T_Payload
+    T_Payload --> T_Proxy
+    
+    T_Proxy -->|Fetch API| G_Adjunto
+    G_Adjunto -- Sí PDF o JPG --> T_ProcesarDoc
+    G_Adjunto -- Solo Texto --> T_PrepararTexto
+    
+    T_ProcesarDoc --> T_Contexto
+    T_PrepararTexto --> T_Contexto
+    DB_Catalogo -->|Carga de Pandas en memoria| T_Contexto
+    
+    T_Contexto -->|API Call Segura| T_LLM
+    T_LLM -->|Devuelve Estructura JSON| T_Respuesta
+    
+    T_Respuesta -->|HTTP 200 OK| T_Render
+    T_Render --> T_View
+    T_View --> E_End
+```
+
+---
+
+## 3. Stack Tecnológico
+
+La solución está construida sobre tecnologías modernas para asegurar rendimiento y mantenibilidad:
+
+*   **Frontend (Capa de Presentación):** Interfaz SPA construida con React 19, empaquetada ultrarrápida con Vite, y estilizada utilizando Tailwind CSS.
+*   **Orquestador (Proxy):** Servidor Node.js con Express, encargado de servir la UI en producción y manejar el proxying seguro para evitar exponer el motor lógico al cliente.
+*   **Backend (Motor Analítico):** API REST transaccional desarrollada en Python utilizando FastAPI y Uvicorn.
+*   **Motor Cognitivo (IA):** Integración con `langchain-google-genai` para el enrutamiento de prompts e inferencia multimodal (Visión + Semántica) a través del modelo **Google Gemini 3.5 Flash**.
+*   **Procesamiento Documental:** Extracción de datos y rasterización de PDFs a alta resolución gestionada por PyMuPDF (`fitz`).
+
+---
+
+## Requisitos Previos
+
+Asegúrate de contar con las siguientes herramientas en tu entorno local antes de instalar el proyecto:
+
+*   [Node.js](https://nodejs.org/) (v18.x o superior) y gestor de paquetes (`npm`, `yarn` o `pnpm`).
+*   [Python](https://www.python.org/) (v3.10 o superior).
+*   Una clave de API activa de [Google AI Studio (Gemini)](https://aistudio.google.com/app/apikey).
+
+---
+
+## Configuración y Variables de Entorno
+
+El sistema requiere configuraciones específicas para enlazar los servicios de Inteligencia Artificial.
+
+1. Navega al directorio del backend (`/backend`).
+2. Crea un archivo `.env` o `.env.development` en la raíz de ese directorio.
+3. Configura tu token de acceso de Google:
+   ```env
+   GEMINI_API_KEY=tu_clave_api_aqui
+   ```
+4. **Catálogo de Compras:** Asegúrate de que el archivo base de datos `catalogo_compras.csv` se encuentre en el mismo directorio que el archivo `main.py`. Este archivo sirve como la única fuente de verdad para el agente cognitivo.
+
+---
+
+## Ejecución del Entorno de Desarrollo
+
+La arquitectura está diseñada para orquestarse desde un único script principal en Node.js que levanta todos los procesos necesarios en paralelo.
+
+1. Instala las dependencias de Node.js en la raíz del frontend:
+   ```bash
+   npm install
+   ```
+2. Instala las dependencias de Python (preferiblemente en un entorno virtual `.venv`):
+   ```bash
+   pip install -r backend/requirements.txt
+   ```
+3. Inicia el ecosistema completo:
+   ```bash
+   npm run dev
+   # o utilizando el script directo:
+   npx ts-node server.ts
+   ```
+
+**¿Qué sucede internamente?**
+*   El script iniciará el entorno Vite como *middleware* (si estás en desarrollo).
+*   Se lanzará un subproceso (`spawn`) que ejecutará Uvicorn para el backend de Python en `http://127.0.0.1:8000`.
+*   El servidor Node.js/Express quedará escuchando peticiones en `http://localhost:3000` funcionando como puente seguro entre el cliente y el motor IA.
+
+---
+
+## Despliegue en la Nube (Producción)
+
+Debido a que el servidor de Node.js se encarga de levantar el subproceso de Python (`child_process.spawn`), la estrategia ideal para desplegar esta aplicación en plataformas como **Render** o **Railway** es mediante un contenedor Docker que incluya ambos entornos (Node.js y Python).
+
+Puedes usar el siguiente `Dockerfile` en la raíz de tu proyecto para desplegarlo fácilmente en cualquier servicio PaaS:
+
+```dockerfile
+# Usa una imagen base que contiene tanto Python como Node.js
+FROM nikolaik/python-nodejs:python3.10-nodejs18
+
+WORKDIR /app
+
+# 1. Instalar dependencias de Node.js
+COPY package*.json ./
+RUN npm install
+
+# 2. Instalar dependencias de Python
+COPY backend/requirements.txt ./backend/
+RUN pip install -r backend/requirements.txt
+
+# 3. Copiar el resto del código
+COPY . .
+
+# 4. Construir el frontend (Vite)
+RUN npm run build
+
+# 5. Exponer el puerto del orquestador Node.js
+EXPOSE 3000
+
+# 6. Definir variables de entorno para producción
+ENV NODE_ENV=production
+
+# 7. Iniciar el servidor
+CMD ["npx", "ts-node", "server.ts"]
+```
+
+## Estructura Principal del Proyecto
+
+```text
+├── server.ts             # Proxy inverso Express y orquestador de procesos
+├── src/
+│   ├── App.tsx           # Hilo principal de la UI Reactiva y Chat
+│   ├── types.ts          # Interfaces y tipados de TypeScript
+│   └── index.css         # Configuraciones de Tailwind y custom CSS
+├── backend/
+│   ├── main.py           # Core FastAPI, Ingesta Multimodal y Prompt System
+│   └── catalogo_compras.csv # Base de datos de equipos homologados
+└── package.json
+```
+
+---
 
 ## Ejemplos de Interacción
 
@@ -46,3 +201,4 @@ Para levantar el entorno de desarrollo, es necesario inicializar el backend y el
 * **Validación Multimodal (Visión AI):** 
   * **Usuario:** Sube una captura de pantalla (.JPG) o un .PDF del carrito de compras de una tienda online.
   * **Arthur:** Procesará visualmente la imagen, descartará la publicidad o botones irrelevantes, extraerá la marca, modelo y precio, y cruzará esos datos contra el precio tope establecido en el archivo de reglas corporativas.
+

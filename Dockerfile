@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 
 COPY . .
 
-RUN npm run build
+RUN ls -la && npm run build
 
 EXPOSE 3000
 

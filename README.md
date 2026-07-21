@@ -20,8 +20,8 @@ El sistema actúa como una primera línea de defensa que procesa solicitudes de 
 https://arthurcompras.onrender.com/ 
 
 ### Interfaz y Validación Multimodal
-*
 
+![pruebas.png](../../Downloads/pruebas.png)
 
 ---
 
@@ -29,61 +29,7 @@ https://arthurcompras.onrender.com/
 
 El proyecto implementa una **arquitectura web desacoplada (SPA + API REST)** optimizada para despliegues en la nube, garantizando alta disponibilidad, seguridad y separación de responsabilidades. El flujo de datos está diseñado para aislar el frontend del cliente mediante un backend orquestador (Node.js/Express) que sirve la interfaz estática y actúa como proxy inverso hacia el motor analítico transaccional desarrollado en Python (FastAPI).
 
-```mermaid
-flowchart TD
-    %% Definición de estilos
-    classDef startEnd fill:#d5e8d4,stroke:#82b366,stroke-width:2px,color:#2d4a22;
-    classDef gateway fill:#ffe6cc,stroke:#d79b00,stroke-width:2px,color:#664d00;
-    classDef task fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px,rx:8px,ry:8px,color:#1b3b6c;
-    classDef database fill:#e1d5e7,stroke:#9673a6,stroke-width:2px,rx:8px,ry:8px,color:#3b2346;
-    classDef external fill:#f8cecc,stroke:#b85450,stroke-width:2px,rx:8px,ry:8px,color:#592422,stroke-dasharray: 5 5;
-
-    subgraph Carril_Usuario [🧑‍💻 Capa Cliente / UI React]
-        E_Start((Inicio)):::startEnd
-        T_Input[Ingresa prompt o \nadjunta PDF/Imagen]:::task
-        T_View[Visualiza dictamen técnico \ny regla aplicada]:::task
-        E_End((Fin)):::startEnd
-    end
-
-    subgraph Carril_Node [🖥️ Capa de Presentación / Node.js Proxy]
-        T_Payload[Estructura Payload Multimodal]:::task
-        T_Proxy[Proxy Inverso POST \n Puerto 3000 a 8000]:::task
-        T_Render[Renderizado de Estado \ny UI Reactiva]:::task
-    end
-
-    subgraph Carril_Python [⚙️ Motor Lógico / Python FastAPI]
-        G_Adjunto{¿Incluye\nArchivo Adjunto?}:::gateway
-        T_ProcesarDoc[PyMuPDF: Rasterización \ny Extracción]:::task
-        T_PrepararTexto[Normalización de prompt]:::task
-        DB_Catalogo[(Catálogo Maestro CSV)]:::database
-        T_Contexto[Inyección de Contexto \ny Reglas]:::task
-        T_Respuesta[Parseo y Sanitización JSON]:::task
-    end
-
-    subgraph Carril_IA [🧠 Motor Cognitivo]
-        T_LLM[Inferencia Multimodal \n LLM: Gemini 3.5 Flash]:::external
-    end
-
-    %% Relaciones
-    E_Start --> T_Input
-    T_Input -->|Interacción UI| T_Payload
-    T_Payload --> T_Proxy
-    
-    T_Proxy -->|Fetch API| G_Adjunto
-    G_Adjunto -- Sí PDF o JPG --> T_ProcesarDoc
-    G_Adjunto -- Solo Texto --> T_PrepararTexto
-    
-    T_ProcesarDoc --> T_Contexto
-    T_PrepararTexto --> T_Contexto
-    DB_Catalogo -->|Carga de Pandas en memoria| T_Contexto
-    
-    T_Contexto -->|API Call Segura| T_LLM
-    T_LLM -->|Devuelve Estructura JSON| T_Respuesta
-    
-    T_Respuesta -->|HTTP 200 OK| T_Render
-    T_Render --> T_View
-    T_View --> E_End
-```
+![arthurdiagrama.png](../../Downloads/arthurdiagrama.png)
 
 ---
 

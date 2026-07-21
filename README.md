@@ -15,9 +15,17 @@ El sistema actúa como una primera línea de defensa que procesa solicitudes de 
 
 ---
 
-## Arquitectura de la Solución
+## Evidencia de Funcionamiento
 
-El proyecto implementa una **arquitectura web desacoplada (SPA + API REST)** optimizada para despliegues en la nube, garantizando alta disponibilidad, seguridad y separación de responsabilidades. El flujo de datos está diseñado para aislar el frontend del cliente mediante un backend orquestador (Node.js/Express) que sirve la interfaz estática y actúa como proxy inverso hacia el motor analítico transaccional desarrollado en Python (FastAPI).
+https://arthurcompras.onrender.com/ 
+
+### Interfaz y Validación Multimodal
+*
+
+
+---
+
+## Arquitectura de la Solución
 
 El proyecto implementa una **arquitectura web desacoplada (SPA + API REST)** optimizada para despliegues en la nube, garantizando alta disponibilidad, seguridad y separación de responsabilidades. El flujo de datos está diseñado para aislar el frontend del cliente mediante un backend orquestador (Node.js/Express) que sirve la interfaz estática y actúa como proxy inverso hacia el motor analítico transaccional desarrollado en Python (FastAPI).
 
@@ -150,16 +158,18 @@ Debido a que el servidor de Node.js se encarga de levantar el subproceso de Pyth
 
 ## Estructura Principal del Proyecto
 
-```text
-├── server.ts             # Proxy inverso Express y orquestador de procesos
-├── src/
-│   ├── App.tsx           # Hilo principal de la UI Reactiva y Chat
-│   ├── types.ts          # Interfaces y tipados de TypeScript
-│   └── index.css         # Configuraciones de Tailwind y custom CSS
-├── backend/
-│   ├── main.py           # Core FastAPI, Ingesta Multimodal y Prompt System
-│   └── catalogo_compras.csv # Base de datos de equipos homologados
-└── package.json
+📦 arthur-compras
+ ┣ 📂 backend/                 # ⚙️ Motor Analítico (FastAPI)
+ ┃ ┣ 📜 catalogo_compras.csv   # Base de datos de equipos homologados
+ ┃ ┣ 📜 main.py                # Core y Prompt System
+ ┃ ┗ 📜 requirements.txt       # Dependencias de Python
+ ┣ 📂 frontend/                # 🖥️ Interfaz de Usuario y Proxy
+ ┃ ┣ 📂 src/                   # Código fuente de React
+ ┃ ┣ 📜 index.html             # Plantilla base Vite
+ ┃ ┣ 📜 package.json           # Dependencias de Node.js
+ ┃ ┗ 📜 server.ts              # Proxy inverso Express y orquestador
+ ┣ 📜 Dockerfile               # Configuración de contenedor para producción
+ ┗ 📜 README.md                # Documentación principal
 ```
 
 ---
@@ -170,6 +180,6 @@ Debido a que el servidor de Node.js se encarga de levantar el subproceso de Pyth
   * **Usuario:** "Necesito comprar una MacBook Pro M3 Max para mi equipo."
   * **Arthur:** Analizará el catálogo y rechazará la solicitud por ser un modelo "No Homologado", generando la tabla Markdown comparativa.
 * **Validación Multimodal (Visión AI):** 
-  * **Usuario:** Sube una captura de pantalla (.JPG) o un .PDF del carrito de compras de una tienda online.
+  * **Usuario:** Sube una captura de pantalla (.JPG) o un .PDF de una proforma o bien del carrito de compras de una tienda online.
   * **Arthur:** Procesará visualmente la imagen, descartará la publicidad o botones irrelevantes, extraerá la marca, modelo y precio, y cruzará esos datos contra el precio tope establecido en el archivo de reglas corporativas.
 

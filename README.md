@@ -21,7 +21,7 @@ https://arthurcompras.onrender.com/
 
 ### Interfaz y Validación Multimodal
 
-![pruebas.png](../../Downloads/pruebas.png)
+![Interfaz de Arthur](./frontend/public/pruebas.png)
 
 ---
 
@@ -29,7 +29,7 @@ https://arthurcompras.onrender.com/
 
 El proyecto implementa una **arquitectura web desacoplada (SPA + API REST)** optimizada para despliegues en la nube, garantizando alta disponibilidad, seguridad y separación de responsabilidades. El flujo de datos está diseñado para aislar el frontend del cliente mediante un backend orquestador (Node.js/Express) que sirve la interfaz estática y actúa como proxy inverso hacia el motor analítico transaccional desarrollado en Python (FastAPI).
 
-![arthurdiagrama.png](../../Downloads/arthurdiagrama.png)
+![Diagrama de Arquitectura](./frontend/public/arthurdiagrama.png)
 
 ---
 
